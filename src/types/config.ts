@@ -48,7 +48,21 @@ export enum LinkPreset {
 	Home = 0,
 	Archive = 1,
 	About = 2,
+	Projects = 3,
 }
+
+export type ProjectItem = {
+	title: string;
+	href: string;
+	image?: string | null;
+	description: string;
+	tags?: string[];
+};
+
+export type ProjectsConfig = {
+	columns: 2 | 3 | 4;
+	projects: ProjectItem[];
+};
 
 export type NavBarLink = {
 	name: string;

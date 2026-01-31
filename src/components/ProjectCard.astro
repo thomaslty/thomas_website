@@ -1,0 +1,121 @@
+---
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "./misc/ImageWrapper.astro";
+
+interface Props {
+	title: string;
+	href: string;
+	image?: string | null;
+	description: string;
+	tags?: string[];
+}
+
+const { title, href, image, description, tags } = Astro.props;
+
+// Check if image is provided
+const hasImage = image && image.trim() !== "";
+
+// Generate screenshot URL from the href if no image is provided
+// Using microlink.io screenshot API (free tier available)
+const encodedUrl = encodeURIComponent(href);
+const screenshotUrl = `https://api.microlink.io/?url=${encodedUrl}&screenshot=true&meta=false&embed=screenshot.url`;
+
+// Check if the image is a local asset (not starting with / or http)
+const isLocalAsset =
+	hasImage && !image.startsWith("/") && !image.startsWith("http");
+---
+
+<a
+	href={href}
+	target="_blank"
+	rel="noopener noreferrer"
+	class="card-base group flex flex-col rounded-[var(--radius-large)] overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl dark:shadow-none border border-transparent dark:border-white/10 hover:-translate-y-1 active:scale-[0.98]"
+>
+	<!-- Image Area -->
+	<div class="relative aspect-[16/10] overflow-hidden bg-black/5 dark:bg-white/5">
+		<!-- Hover overlay -->
+		<div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 z-20 flex items-center justify-center">
+			<Icon
+				name="fa6-solid:arrow-up-right-from-square"
+				class="text-white text-2xl opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300"
+			/>
+		</div>
+		
+		<!-- Project Image -->
+		<div class="w-full h-full transition-transform duration-500 group-hover:scale-110">
+			{hasImage && isLocalAsset ? (
+				<!-- Local asset image -->
+				<ImageWrapper
+					src={image}
+					alt={title}
+					class="w-full h-full"
+				/>
+			) : hasImage ? (
+				<!-- External/public image URL -->
+				<img
+					src={image}
+					alt={title}
+					loading="lazy"
+					class="w-full h-full object-cover"
+				/>
+			) : (
+				<!-- Auto-generated screenshot from URL - with fallback placeholder -->
+				<div class="screenshot-container w-full h-full relative">
+					<img
+						src={screenshotUrl}
+						alt={`Preview of ${title}`}
+						loading="lazy"
+						class="w-full h-full object-cover object-top"
+					/>
+					<!-- Fallback placeholder (shown if image fails) -->
+					<div class="screenshot-fallback absolute inset-0 hidden items-center justify-center bg-gradient-to-br from-[var(--primary)]/20 via-[var(--primary)]/10 to-transparent">
+						<div class="text-center">
+							<div class="text-4xl mb-2">🌐</div>
+							<div class="text-xs text-75 px-4 truncate max-w-full">{new URL(href).hostname}</div>
+						</div>
+					</div>
+				</div>
+			)}
+		</div>
+	</div>
+
+	<!-- Content Area -->
+	<div class="flex-1 p-4 flex flex-col gap-3">
+		<!-- Title -->
+		<h3 class="font-bold text-lg text-90 group-hover:text-[var(--primary)] transition-colors duration-300 flex items-center gap-2">
+			{title}
+			<Icon
+				name="material-symbols:chevron-right-rounded"
+				class="text-[1.25rem] text-[var(--primary)] opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
+			/>
+		</h3>
+
+		<!-- Description -->
+		<p class="text-sm text-75 line-clamp-3 flex-1">{description}</p>
+
+		<!-- Tags -->
+		{tags && tags.length > 0 && (
+			<div class="flex flex-wrap gap-2 mt-auto pt-2">
+				{tags.map((tag) => (
+					<span class="text-xs pr-2.5 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] font-medium transition-colors duration-300 group-hover:bg-[var(--primary)]/20">
+						{tag}
+					</span>
+				))}
+			</div>
+		)}
+	</div>
+</a>
+
+<script>
+	// Handle screenshot load errors with fallback
+	document.querySelectorAll('.screenshot-container img').forEach((img) => {
+		img.addEventListener('error', function(this: HTMLImageElement) {
+			const fallback = this.parentElement?.querySelector('.screenshot-fallback');
+			if (fallback) {
+				this.style.display = 'none';
+				fallback.classList.remove('hidden');
+				fallback.classList.add('flex');
+			}
+		});
+	});
+</script>
