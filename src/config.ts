@@ -98,6 +98,13 @@ export const projectsConfig: ProjectsConfig = {
 			tags: ["Client Project", "HTML", "CSS", "JavaScript", "MongoDB"],
 		},
 		{
+			title: "1Source",
+			href: "https://1source.com/",
+			description:
+				"1Source is a platform for product ingredient safety assessments.",
+			tags: ["Client Project", "HTML", "CSS", "JavaScript", "MongoDB"],
+		},
+		{
 			title: "Next Station",
 			href: "https://www.nextstation.uk/",
 			description:
@@ -111,5 +118,6 @@ export const projectsConfig: ProjectsConfig = {
 				"Blob Storage",
 			],
 		},
+		
 	],
 };
