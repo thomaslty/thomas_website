@@ -38,6 +38,9 @@ export const siteConfig: SiteConfig = {
 		//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
 		// }
 	],
+	cloudflareAnalytics: {
+		token: "90ed266b9ea24fe4a35bcd3654db2ee0",
+	},
 };
 
 export const navBarConfig: NavBarConfig = {

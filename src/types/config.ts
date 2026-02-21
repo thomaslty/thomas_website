@@ -36,6 +36,9 @@ export type SiteConfig = {
 	};
 
 	favicon: Favicon[];
+	cloudflareAnalytics?: {
+		token: string;
+	};
 };
 
 export type Favicon = {

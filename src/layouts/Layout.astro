@@ -158,7 +158,9 @@ const bannerOffset =
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
 
 		<!-- Cloudflare Web Analytics -->
-		<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "90ed266b9ea24fe4a35bcd3654db2ee0"}'></script>
+		{siteConfig.cloudflareAnalytics && (
+			<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token": "${siteConfig.cloudflareAnalytics.token}"}`}></script>
+		)}
 		<!-- End Cloudflare Web Analytics -->
 	</body>
 </html>
